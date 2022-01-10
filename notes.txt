@@ -1,0 +1,58 @@
+create a search and display application that integrates
+with the USDA’s food composition database.
+
+contain a search box that allows you to search for a food item by name.
+
+When a search is made display the
+first 10 items matching the search term, include: “description”, “additionalDescriptions”, “brandOwner”.
+
+Users should be able to click on the food item in the list, using the “fdcId” parameter, to get that item’s detail
+of sugar, protein, fat, carbohydrate, and calorie measurements.
+
+Create a way to save items to a basket
+
+User should be able to view items that have been saved to the basket and include:
+a. Item Name (Description and/or Brand Owner) (per item)
+b. Calorie Count (per item)
+c. Total Calorie Count (overall)
+d. Assume only 1 of each item can be added to basket
+
+
+Create a way to remove items from the basket
+
+• UI framework (material, bootstrap, home grown)
+• Pagination
+• Error handling
+• No results handling
+
+API Docs:
+https://fdc.nal.usda.gov/api-guide.html
+API Key:
+https://fdc.nal.usda.gov/api-key-signup.html
+
+
+components 
+--App
+---Basket
+---Modal
+---Search 
+---Display
+----Pagination
+----Items
+-----Item 
+
+
+functions 
+---search api by food item name
+---search for specific item info
+---save item to basket
+---remove item from basket
+---display first 10 items matching the search term
+---paginate to the next 10 items matching search term
+---selecting an item
+
+
+UI
+--bootstrap components: pagination, buttons, modal, layouts
+--SASS
+-enables you to use variables, mathematical operations, mixins, loops, functions, imports, and other interesting functionalities that make writing CSS much more powerful.
