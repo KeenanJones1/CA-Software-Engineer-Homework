@@ -1,12 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import Basket from './pages/Basket'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BasketProvider } from './utils/context/basket'
+import { PageSizeProvider } from './utils/context/pageSize'
+import { PageNumberProvider } from './utils/context/pageNumber'
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <Router>
+    <React.StrictMode>
+      <BasketProvider>
+        <PageSizeProvider>
+          <PageNumberProvider>
+            <Routes>
+                <Route exact path={'/'} element={<App/>} />
+                <Route exact path={'/basket'} element={<Basket/>} />
+            </Routes>
+          </PageNumberProvider>
+        </PageSizeProvider>
+      </BasketProvider>
+    </React.StrictMode>
+  </Router>,
   document.getElementById('root')
 );
 

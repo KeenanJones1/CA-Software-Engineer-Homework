@@ -1,9 +1,9 @@
 import functions from './functions'
-const item = {title: "apple", description: "red and delicious"}
-let basket = [{title: "orange", description: "crazy and round"}]
+const item = {name: "apple", description: "red and delicious"};
+let basket = [{name: "orange", description: "crazy and round"}];
 describe('Basket component', () => {
  it('should add an item to a basket array', () => {
-  expect(functions.addItem(item, basket)).toEqual([{title: "orange", description: "crazy and round"}, {title: "apple", description: "red and delicious"}]);
+  expect(functions.addItem(item, basket)).toEqual([{name: "orange", description: "crazy and round"}, {name: "apple", description: "red and delicious"}]);
  });
 
  it('should remove an item from basket array', () => {
