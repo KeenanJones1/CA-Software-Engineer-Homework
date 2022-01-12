@@ -2,7 +2,8 @@ const functions = {
  // adds item to basket returns basket. 
  addItem: (item, basket) => {
   if(!!item && !!item.name){
-   return [...basket, item];
+   let basketCopy = [...basket]
+   return [...basketCopy, item];
   }else{
    return basket;
   }
