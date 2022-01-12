@@ -18,14 +18,24 @@ const functions = {
  },
 
  calCals: (arr) => {
-  let energies = []
-  for(let i = 0; i < arr.length; i++){
-   energies.push(arr[i].foodNutrients.find( ele => {
-    return ele.nutrientName === 'Energy'
-   }))
+  if(arr.length > 0){
+   let energies = []
+   for(let i = 0; i < arr.length; i++){
+    energies.push(arr[i].foodNutrients.find( ele => {
+     return ele.nutrientName === 'Energy'
+    }))
+   }
+   let energyValues = energies.map(ele => ele.value)
+   return energyValues.reduce((prev, current) => prev + current )
+  }else{
+   return 0
   }
-  let energyValues = energies.map(ele => ele.value)
-  return energyValues.reduce((prev, current) => prev + current )
+ },
+
+ calCal: (item) => {
+  let energy = item.foodNutrients.find(ele => ele.nutrientName === 'Energy')
+  if(!!energy) return energy.value;
+  return 0
  }
 }
 

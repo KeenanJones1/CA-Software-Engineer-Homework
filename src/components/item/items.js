@@ -1,5 +1,6 @@
 import React from 'react'
 import Item from './index'
+import { Table } from 'react-bootstrap';
 
 const Items = ({ items, handleActiveItem, addCartItem, removeCartItem }) => {
 
@@ -11,9 +12,19 @@ const Items = ({ items, handleActiveItem, addCartItem, removeCartItem }) => {
 
 
  return (
-  <div>
-   {items.length > 0 ? renderItems(items) : null}
-  </div>
+  <Table striped bordered hover>
+   <thead>
+    <tr>
+     <th>fdcId#</th>
+     <th>Description</th>
+     <th></th>
+     <th>Cals</th>
+    </tr>
+   </thead>
+   <tbody>
+    {items.length > 0 ? renderItems(items) : null}
+   </tbody>
+  </Table>
  )
 }
 

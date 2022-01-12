@@ -1,5 +1,7 @@
-import {useContext, useState, useEffect} from 'react'
+import {useContext} from 'react'
+import functions from '../../utils/functions'
 import { BasketDataContext } from '../../utils/context/basket'
+import { Button, ListGroupItem, Row, Col, Container } from 'react-bootstrap';
 
 
 const Index = ({ item, handleActiveItem, addCartItem, removeCartItem }) => {
@@ -13,17 +15,23 @@ const Index = ({ item, handleActiveItem, addCartItem, removeCartItem }) => {
 
  const renderBtn = () => {
   if(BasketData.includes(item)){
-   return <button onClick={(event) => handleBtn(event)} name="remove">Remove from Basket</button>
+   return <Button variant="primary" onClick={(event) => handleBtn(event)} name="remove">Remove Item</Button>
   }else{
-   return <button onClick={(event) => handleBtn(event)} name="add">Add to Basket</button>
+   return <Button variant="outline-secondary" onClick={(event) => handleBtn(event)} name="add">Add to Basket</Button>
   }
  }
 
+ const getCals = (item) => {
+  return functions.calCal(item)
+ }
+
  return (
-  <div onClick={() => handleActiveItem(item)}>
-   <h1>{item.description}</h1>
-   {renderBtn()}
-  </div>
+  <tr onClick={() => handleActiveItem(item)}>
+   <td>{item.fdcId}</td>
+   <td>{item.description}</td>
+   <td>{renderBtn()}</td>
+   <td>{getCals(item)}</td>
+  </tr>
  )
 }
 

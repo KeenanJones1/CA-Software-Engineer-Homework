@@ -3,6 +3,7 @@ import functions from '../../utils/functions'
 import { BasketDataContext } from '../../utils/context/basket'
 import { PageSizeDataContext } from '../../utils/context/pageSize'
 import { PageNumberDataContext } from '../../utils/context/pageNumber'
+import { Container, Form, Button } from 'react-bootstrap';
 
 
 const Index = ({ consumeRequestData, searchSave }) => {
@@ -22,10 +23,17 @@ const Index = ({ consumeRequestData, searchSave }) => {
 }
 
  return (
-  <div>
-   <h1>Search</h1>
-   <input type="text" name="" id="" onChange={(event) => { inputHandler(event)}} value={search}/>
-   <button onClick={() => submitHandler()}>Submit</button>
+  <div className="my-5 px-2">
+   <Form.Label htmlFor="searchInput">Search</Form.Label>
+   <Form.Control
+    size="lg"
+    type="text"
+    id="searchInput"
+    aria-describedby="searchInputBlock"
+    onChange={(event) => { inputHandler(event)}} value={search}
+  />
+   <Form.Text type="text" name="" id="" />
+   <Button variant="outline-primary" onClick={() => submitHandler()}>Submit</Button>
   </div>
  )
 }

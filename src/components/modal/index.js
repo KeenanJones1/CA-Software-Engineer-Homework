@@ -1,26 +1,33 @@
-import { render } from '@testing-library/react';
-import React from 'react'
+import { useState } from 'react'
+import { Modal, Button } from 'react-bootstrap';
 
-const index = ({ activeModal }) => {
+const Index = ({ activeModal, handleClose, show }) => {
 
  const renderNutrients = () => {
   const wantedNutrients = ['Sugars, total including NLEA', 'Total lipid (fat)', 'Protein', 'Carbohydrates', 'Energy'];
   if(!!activeModal.foodNutrients){
    let foundNutrients = activeModal.foodNutrients.filter(food => wantedNutrients.includes(food.nutrient.name))
    return foundNutrients.map(ele => {
-     return <div key={ele.nutrient.name}>
+     return <Modal.Body key={ele.nutrient.name}>
        <p>{ele.nutrient.name} {ele.amount} {ele.nutrient.unitName}</p>
-     </div>
+     </Modal.Body>
    })
   }
  }
 
  return (
-  <div>
-   <h1>{activeModal.description}</h1>
+  <Modal show={show}>
+    <Modal.Header closeButton>
+      <Modal.Title>{activeModal.description}</Modal.Title>
+    </Modal.Header>
    { renderNutrients() }
-  </div>
+   <Modal.Footer>
+      <Button variant="secondary" onClick={handleClose}>
+        Close
+      </Button>
+    </Modal.Footer>
+  </Modal>
  )
 }
 
-export default index
+export default Index

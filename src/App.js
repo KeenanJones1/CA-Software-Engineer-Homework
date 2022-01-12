@@ -10,9 +10,6 @@ import { PageSizeDataContext } from './utils/context/pageSize'
 import { PageNumberDataContext } from './utils/context/pageNumber'
 
 
-
-
-
 const App = () => {
   const [BasketData, setBasketData] = useContext(BasketDataContext);
   const [PageSize, setPageSize] = useContext(PageSizeDataContext);
@@ -63,6 +60,7 @@ const App = () => {
 
   // opens modal and adds an item to activeItem variable to be displayed in modal
   const openModal = async (item) => {
+    console.log("Foobar")
     // setModalOpen(true);
     // 
     // .then(data => data.json())
@@ -91,8 +89,9 @@ const App = () => {
 
   // save clicked item to state
   const handleActiveItem = async (activeItem) => {
-    let requestedItem = await functions.getItem(activeItem.fdcId)
-    setActiveModal(requestedItem)
+    setModalOpen(true);
+    let requestedItem = await functions.getItem(activeItem.fdcId);
+    setActiveModal(requestedItem);
   }
 
   // add Item to basket and adds cals from total in basket
@@ -128,6 +127,10 @@ const App = () => {
     }
   }
 
+  const handleClose = () => {
+    setModalOpen(false);
+  }
+
   return (
     <div>
       <button onClick={() => emptyBasket()}>Empty Basket</button>
@@ -135,11 +138,7 @@ const App = () => {
       <Search consumeRequestData={consumeRequestData} searchSave={searchSave}/>
       <Items items={items} handleActiveItem={handleActiveItem} addCartItem={addCartItem} removeCartItem={removeCartItem}/>
       <Pagination paginate={paginate} pageList={pageList}/>
-      {Object.keys(activeModal).length > 0 ? <Modal activeModal={activeModal}/> : null}
-
-      {/* <div className="modal">
-        { modalOpen && !!activeModal ? renderModal(activeModal) : null }
-      </div> */}
+      {Object.keys(activeModal).length > 0 ? <Modal activeModal={activeModal}  show={modalOpen} handleClose={handleClose}/> : null}
     </div>
   )
 }
