@@ -1,14 +1,12 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useContext } from 'react'
 import functions from '../../utils/functions'
-import { BasketDataContext } from '../../utils/context/basket'
 import { PageSizeDataContext } from '../../utils/context/pageSize'
 import { PageNumberDataContext } from '../../utils/context/pageNumber'
-import { Container, Form, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 
 
 const Index = ({ consumeRequestData, searchSave }) => {
   const [search, setSearch] = useState("");
-  const [BasketData, setBasketData] = useContext(BasketDataContext);
   const [PageSize, setPageSize] = useContext(PageSizeDataContext);
   const [PageNumber, setPageNumber] = useContext(PageNumberDataContext);
 
@@ -18,8 +16,12 @@ const Index = ({ consumeRequestData, searchSave }) => {
 
  const submitHandler = async () => {
   let requestData = await functions.getItems(search, PageSize, PageNumber);
-  consumeRequestData(requestData);
-  searchSave(search);
+  if(!!requestData && Object.keys(requestData).length > 0){
+    consumeRequestData(requestData);
+    searchSave(search);
+  }else{
+    alert("Problem sending request")
+  }
 }
 
  return (
@@ -32,7 +34,7 @@ const Index = ({ consumeRequestData, searchSave }) => {
     aria-describedby="searchInputBlock"
     onChange={(event) => { inputHandler(event)}} value={search}
   />
-   <Form.Text type="text" name="" id="" />
+   <Form.Text type="text" name="query-text" id="query-text" />
    <Button variant="outline-primary" onClick={() => submitHandler()}>Submit</Button>
   </div>
  )

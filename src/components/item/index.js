@@ -1,11 +1,11 @@
 import {useContext} from 'react'
 import functions from '../../utils/functions'
 import { BasketDataContext } from '../../utils/context/basket'
-import { Button, ListGroupItem, Row, Col, Container } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 
 const Index = ({ item, handleActiveItem, addCartItem, removeCartItem }) => {
- const [BasketData, setBasketData] = useContext(BasketDataContext);
+ const [ BasketData, setBasketData ] = useContext(BasketDataContext);
 
  const handleBtn = (e) => {
   e.stopPropagation();
@@ -24,9 +24,9 @@ const Index = ({ item, handleActiveItem, addCartItem, removeCartItem }) => {
  const getCals = (item) => {
   return functions.calCal(item)
  }
-
+ 
  return (
-  <tr onClick={() => handleActiveItem(item)}>
+  <tr onClick={() => handleActiveItem(item)} className="item-row">
    <td>{item.fdcId}</td>
    <td>{item.description}</td>
    <td>{renderBtn()}</td>

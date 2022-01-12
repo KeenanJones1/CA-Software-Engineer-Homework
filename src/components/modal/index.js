@@ -1,12 +1,15 @@
-import { useState } from 'react'
-import { Modal, Button } from 'react-bootstrap';
+import { useEffect } from 'react'
+import { Modal, Button, Spinner, Row, Col } from 'react-bootstrap';
 
-const Index = ({ activeModal, handleClose, show }) => {
+const Index = ({ activeItem, handleClose, show, loading }) => {
+
+  useEffect(() => {},
+  [activeItem, loading])
 
  const renderNutrients = () => {
   const wantedNutrients = ['Sugars, total including NLEA', 'Total lipid (fat)', 'Protein', 'Carbohydrates', 'Energy'];
-  if(!!activeModal.foodNutrients){
-   let foundNutrients = activeModal.foodNutrients.filter(food => wantedNutrients.includes(food.nutrient.name))
+  if(!!activeItem.foodNutrients){
+   let foundNutrients = activeItem.foodNutrients.filter(food => wantedNutrients.includes(food.nutrient.name))
    return foundNutrients.map(ele => {
      return <Modal.Body key={ele.nutrient.name}>
        <p>{ele.nutrient.name} {ele.amount} {ele.nutrient.unitName}</p>
@@ -15,17 +18,48 @@ const Index = ({ activeModal, handleClose, show }) => {
   }
  }
 
+ 
+ const renderModal = () => {
+  return(
+    <>
+      <Modal.Header closeButton onClick={handleClose}>
+        <Modal.Title>{ activeItem.brandOwner ? <span>{ activeItem.brandOwner }</span> : "" } { activeItem.brandName ? activeItem.brandName : "" } {activeItem.description} </Modal.Title>
+      </Modal.Header>
+        { renderNutrients() }
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </>
+  )
+ }
+
+ const renderLoading = () => {
+  return (
+    <>
+      <Modal.Header closeButton onClick={handleClose}>
+        <Modal.Title>Loading</Modal.Title>
+      </Modal.Header>
+        <Modal.Body>
+          <Row>
+            <Col className="justify-content-center">
+              <Spinner animation="border" variant="primary" />
+            </Col>
+          </Row>
+        </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </>
+  )
+ }
+ 
  return (
   <Modal show={show}>
-    <Modal.Header closeButton>
-      <Modal.Title>{activeModal.description}</Modal.Title>
-    </Modal.Header>
-   { renderNutrients() }
-   <Modal.Footer>
-      <Button variant="secondary" onClick={handleClose}>
-        Close
-      </Button>
-    </Modal.Footer>
+   { !loading ? renderModal() : renderLoading() }
   </Modal>
  )
 }

@@ -1,4 +1,4 @@
-import {useState, useEffect, useContext} from 'react'
+import { useState, useEffect, useContext } from 'react'
 import functions from './utils/functions'
 import Basket from './components/basket/index'
 import Pagination from './components/pagination/index'
@@ -8,38 +8,39 @@ import Items from './components/item/items'
 import { BasketDataContext } from './utils/context/basket'
 import { PageSizeDataContext } from './utils/context/pageSize'
 import { PageNumberDataContext } from './utils/context/pageNumber'
-
+import { Container, Row, Button } from 'react-bootstrap'
+import './App.css'
 
 const App = () => {
   const [BasketData, setBasketData] = useContext(BasketDataContext);
   const [PageSize, setPageSize] = useContext(PageSizeDataContext);
   const [PageNumber, setPageNumber] = useContext(PageNumberDataContext);
   const [pageList, setPageList] = useState([]);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalHits, setTotalHits] = useState(1);
   const [items, setItems] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [activeModal, setActiveModal] = useState({});
+  const [activeItem, setActiveItem] = useState({});
   const [basketCalories, setBasketCalories] = useState(0);
-  const [search, setSearch] = useState("")
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
   
-
+  // receive basket data from localStorage and sets to state 
   useEffect(() => {
-    let savedBasket = JSON.parse(localStorage.getItem("basket"))
-    if(!!savedBasket){
-      setBasketCalories(functions.calCals(savedBasket));
-      setBasketData(savedBasket);
+    const updateBasket = () => {
+      let savedBasket = JSON.parse(localStorage.getItem("basket"))
+      if(!!savedBasket){
+        setBasketCalories(functions.calCals(savedBasket));
+        setBasketData(savedBasket);
+      }
     }
+    updateBasket();
   }, [])
 
   // function to receive state from request
   const consumeRequestData = (data) => {
     if(!!data){
-      setPageList(data.pageList)
+      setPageList(data.pageList);
       setItems(data.foods);
-      setPageNumber(data.currentPage)
-      setTotalHits(data.totalHits)
-      setTotalPages(data.totalPages)
+      setPageNumber(data.currentPage);
     }else{
       alert("Processing Request");
     }
@@ -47,32 +48,21 @@ const App = () => {
 
   // save query string to app state
   const searchSave = (query) => {
-    setSearch(query)
+    setSearch(query);
   }
 
 
+   // changes page
   const paginate = async (page) => {
     setPageNumber(page);
     let data = await functions.getItems(search, PageSize, page);
     consumeRequestData(data);
   }
 
-
-  // opens modal and adds an item to activeItem variable to be displayed in modal
-  const openModal = async (item) => {
-    console.log("Foobar")
-    // setModalOpen(true);
-    // 
-    // .then(data => data.json())
-    // .then(data => {
-    //   setActiveModal(data)
-    // })
-  }
-
   // add item calories to basket total calories
   const addCals = (item) => {
-    const energy = item.foodNutrients.find(ele => ele.nutrientName == 'Energy').value;
-    if(typeof energy == 'number' && energy >= 0){
+    const energy = item.foodNutrients.find(ele => ele.nutrientName === 'Energy').value;
+    if(typeof energy === 'number' && energy >= 0){
       let tempCals = basketCalories + energy;
       setBasketCalories(tempCals);
     }
@@ -80,8 +70,8 @@ const App = () => {
 
   // remove item calories from basket total calories
   const removeCals = (item) => {
-    const energy = item.foodNutrients.find(ele => ele.nutrientName == 'Energy').value;
-    if(typeof energy == 'number' && basketCalories - energy >= 0){
+    const energy = item.foodNutrients.find(ele => ele.nutrientName === 'Energy').value;
+    if(typeof energy === 'number' && basketCalories - energy >= 0){
       let tempCals = basketCalories - energy;
       setBasketCalories(tempCals);
     }
@@ -90,8 +80,10 @@ const App = () => {
   // save clicked item to state
   const handleActiveItem = async (activeItem) => {
     setModalOpen(true);
+    setLoading(true);
     let requestedItem = await functions.getItem(activeItem.fdcId);
-    setActiveModal(requestedItem);
+    setActiveItem(requestedItem);
+    setLoading(false);
   }
 
   // add Item to basket and adds cals from total in basket
@@ -128,18 +120,22 @@ const App = () => {
   }
 
   const handleClose = () => {
+    setActiveItem({});
     setModalOpen(false);
   }
 
   return (
-    <div>
-      <button onClick={() => emptyBasket()}>Empty Basket</button>
+    <Container>
       <Basket basketCalories={basketCalories}/>
+      <Row className="row justify-content-md-center">
+        <Button className="w-25 bg-danger" onClick={() => emptyBasket()}>Empty Basket</Button>
+      </Row>
       <Search consumeRequestData={consumeRequestData} searchSave={searchSave}/>
       <Items items={items} handleActiveItem={handleActiveItem} addCartItem={addCartItem} removeCartItem={removeCartItem}/>
       <Pagination paginate={paginate} pageList={pageList}/>
-      {Object.keys(activeModal).length > 0 ? <Modal activeModal={activeModal}  show={modalOpen} handleClose={handleClose}/> : null}
-    </div>
+      
+      <Modal activeItem={activeItem} show={modalOpen} handleClose={handleClose} loading={loading}/>
+    </Container>
   )
 }
 

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom'
-import { Button, ListGroup, Row, Col, Container } from 'react-bootstrap';
+import { Accordion, Row, Col, Container, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import functions from '../utils/functions'
 
 
@@ -15,35 +15,65 @@ const Basket = () => {
   setTotalCalCount(JSON.parse(localStorageCount));
  }, [])
 
+
+ const renderNurtients = (item) => {
+  return item.foodNutrients.map(ele => {
+   return <ListGroup>
+     <ListGroupItem>
+      {ele.nutrientName}: {ele.value} {ele.unitName}
+     </ListGroupItem>
+   </ListGroup>
+  })
+ }
+
+ const updateBasket = (basketCopy) => {
+  setBasket(basketCopy);
+  localStorage.removeItem("basket");
+  localStorage.setItem("basket", JSON.stringify(basketCopy));
+ }
+
+
+ const removeItem = (item) => {
+  setTotalCalCount(totalCalCount - functions.calCal(item))
+  let itemIdx = basket.indexOf(item);
+  let basketCopy = [...basket]
+  basketCopy.splice(itemIdx, 1);
+  updateBasket(basketCopy);
+ }
+
+
  
  const renderBasket = () => {
-  // Item name, Caloric Count, Total Calorie Count, Assume only 1 of each item can be added to basketAssume only 1 of each item can be added to basket
-
   return basket.map(ele => {
-   return <ListGroup.Item className="basket-items">
-    <ListGroup horizontal>
-     <ListGroup.Item>
-      Name: { ele.description }
-     </ListGroup.Item>
-     <ListGroup.Item>
-      { functions.calCal(ele) } kcal
-     </ListGroup.Item>
-    </ListGroup>
-   </ListGroup.Item>
+   return <Accordion.Item eventKey={basket.indexOf(ele)} className="basket-items">
+    <Accordion.Header>
+     <Row>
+      <Col>
+       Name: { ele.description } { functions.calCal(ele) } kcal
+      </Col>
+      <Col xs={3}>
+       <Button onClick={() => removeItem(ele)}>Remove</Button>
+      </Col>
+     </Row>
+    </Accordion.Header>
+    <Accordion.Body>
+     {renderNurtients(ele)}
+    </Accordion.Body>
+   </Accordion.Item>
   })
  };
 
  return (
-  <div>
+  <Container>
    <Link to={{
     pathname: '/',
    }}>Back to Home</Link>
    <h1>Basket Total Caloric Count: {totalCalCount} kcal</h1>
    
-   <ListGroup>
+   <Accordion>
     {basket.length > 0 ? renderBasket() : null}
-   </ListGroup>
-  </div>
+   </Accordion>
+  </Container>
  )
 }
 
